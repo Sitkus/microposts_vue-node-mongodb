@@ -1,15 +1,42 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
-  <Post />
+  <AddPost @updatePosts="posts = $event" v-bind:posts="posts" />
+  <Post @updatePosts="posts = $event" v-if="!isLoading" v-bind:posts="posts" />
 </template>
 
 <script>
-import Post from './components/Post.vue';
+import { ref } from 'vue';
+import PostService from './logic/PostService';
+import { Post, AddPost } from './components';
 
 export default {
   name: 'App',
   components: {
-    Post
+    Post,
+    AddPost
+  },
+  setup() {
+    const posts = ref([]);
+    const error = ref('');
+    const isLoading = ref(true);
+
+    async function fetchPosts() {
+      try {
+        posts.value = await PostService.getPosts();
+      } catch (err) {
+        error.value = err.message;
+      } finally {
+        isLoading.value = false;
+      }
+    }
+
+    fetchPosts();
+
+    return {
+      posts,
+      error,
+      isLoading
+    };
   }
 };
 </script>

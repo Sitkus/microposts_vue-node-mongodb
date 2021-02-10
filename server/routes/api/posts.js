@@ -1,6 +1,6 @@
 const express = require('express');
 const mongodb = require('mongodb');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectID = mongodb.ObjectID;
 
 const router = express.Router();
 
@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
 
     res.status(201).send();
   } else {
-    res.status(400).send('Error: Please insert description');
+    res.status(400).send({ message: 'Please insert description' });
   }
 });
 
@@ -34,16 +34,19 @@ router.delete('/:id', async (req, res) => {
   if (properId) {
     await posts.deleteOne({ _id: new mongodb.ObjectID(req.params.id) });
 
-    res.status(200).send('Post deleted successfully');
+    res.status(200).send({ message: 'Post deleted successfully' });
   } else {
-    res.status(400).send('Incorrect ID provided');
+    res.status(400).send({ message: 'Incorrect ID provided' });
   }
 });
 
 async function loadPostsCollection() {
   const client = await mongodb.MongoClient.connect(
     'mongodb+srv://lukas:sitkus@posts.l2cvf.mongodb.net/microposts-vue-node?retryWrites=true&w=majority',
-    { useNewUrlParser: true, useUnifiedTopology: true }
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    }
   );
 
   return client.db('microposts-vue-node').collection('posts');

@@ -19,10 +19,15 @@ class PostService {
 
   static async createPost(description) {
     try {
-      const config = { method: 'POST', body: { description } };
+      const config = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ description })
+      };
       const response = await fetch(url, config);
-
-      return response.json();
+      return response;
     } catch (err) {
       console.log(err);
     }
@@ -32,8 +37,9 @@ class PostService {
     try {
       const config = { method: 'DELETE' };
       const response = await fetch(`${url}${id}`, config);
+      const data = await response.json();
 
-      return response.json();
+      return data;
     } catch (err) {
       console.log(err);
     }

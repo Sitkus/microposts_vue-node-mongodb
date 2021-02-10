@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <div v-for="(post, index) in posts" :key="post._id" :item="post" :index="index">
-      <p>{{ post.description }}</p>
-      <button @click="deletePost(post._id)">Delete me</button>
-    </div>
-  </div>
+  <form @submit.prevent="createPost" method="POST">
+    <input type="text" v-model="description" />
+    <p>AddPost</p>
+  </form>
 </template>
 
 <script>
@@ -12,7 +10,7 @@ import PostService from '../logic/PostService';
 import { ref, computed } from 'vue';
 
 export default {
-  name: 'Post',
+  name: 'AddPost',
   props: {
     posts: {
       type: Array,
@@ -21,23 +19,25 @@ export default {
   },
   setup(props, { emit }) {
     const error = ref('');
-    const isLoading = ref(true);
+    const description = ref('');
 
     const posts = computed({
       get: () => props.posts,
       set: (newPosts) => emit('updatePosts', newPosts)
     });
 
-    async function deletePost(id) {
-      await PostService.deletePost(id);
+    async function createPost() {
+      await PostService.createPost(description.value);
 
       posts.value = await PostService.getPosts();
+
+      description.value = '';
     }
 
     return {
       error,
-      isLoading,
-      deletePost
+      description,
+      createPost
     };
   }
 };
