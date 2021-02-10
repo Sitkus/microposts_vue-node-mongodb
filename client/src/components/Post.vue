@@ -9,7 +9,7 @@
 
 <script>
 import PostService from '../logic/PostService';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 export default {
   name: 'Post',
@@ -23,15 +23,11 @@ export default {
     const error = ref('');
     const isLoading = ref(true);
 
-    const posts = computed({
-      get: () => props.posts,
-      set: (newPosts) => emit('updatePosts', newPosts)
-    });
-
     async function deletePost(id) {
       await PostService.deletePost(id);
+      const newPosts = await PostService.getPosts();
 
-      posts.value = await PostService.getPosts();
+      emit('updatePosts', newPosts);
     }
 
     return {

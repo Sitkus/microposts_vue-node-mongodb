@@ -1,13 +1,13 @@
 <template>
   <form @submit.prevent="createPost" method="POST">
     <input type="text" v-model="description" />
-    <p>AddPost</p>
+    <button type="submit">Add post</button>
   </form>
 </template>
 
 <script>
 import PostService from '../logic/PostService';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 export default {
   name: 'AddPost',
@@ -21,15 +21,11 @@ export default {
     const error = ref('');
     const description = ref('');
 
-    const posts = computed({
-      get: () => props.posts,
-      set: (newPosts) => emit('updatePosts', newPosts)
-    });
-
     async function createPost() {
       await PostService.createPost(description.value);
+      const newPosts = await PostService.getPosts();
 
-      posts.value = await PostService.getPosts();
+      emit('updatePosts', newPosts);
 
       description.value = '';
     }

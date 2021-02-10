@@ -27,6 +27,7 @@ class PostService {
         body: JSON.stringify({ description })
       };
       const response = await fetch(url, config);
+
       return response;
     } catch (err) {
       console.log(err);
