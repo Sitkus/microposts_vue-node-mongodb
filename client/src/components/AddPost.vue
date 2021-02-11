@@ -6,13 +6,12 @@
       :class="{ 'form__input--error': error }"
       name="description"
       id="description"
-      type="text"
       v-model.trim="description"
       placeholder="What's on your mind today?"
     ></textarea>
     <button class="form__button" type="submit">Add post</button>
     <div class="error">
-      <p v-if="error" class="error__message">{{ error }}</p>
+      <p data-testid="error-message" v-if="error" class="error__message">{{ error }}</p>
     </div>
   </form>
 </template>
@@ -104,16 +103,6 @@ export default {
       background-color: var(--blue);
       color: var(--green);
     }
-  }
-}
-
-.error {
-  height: 2rem;
-  margin-top: 2rem;
-
-  &__message {
-    font-weight: 500;
-    color: rgb(187, 6, 6);
   }
 }
 </style>

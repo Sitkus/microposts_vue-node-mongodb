@@ -1,8 +1,11 @@
 <template>
   <ul class="posts">
-    <li class="post" v-for="(post, index) in posts" :key="post._id" :item="post" :index="index">
-      <p class="post__description">{{ post.description }}</p>
-      <button class="post__button" @click="deletePost(post._id)">Delete</button>
+    <li class="post" v-for="post in posts" :key="post._id">
+      <div class="post__content">
+        <p data-testid="post-description" class="post__description">{{ post.description }}</p>
+        <p data-testid="post-date" class="post__date">{{ formatCreatedAtDate(post.createdAt) }}</p>
+      </div>
+      <button data-testid="delete-button" class="post__button" @click="deletePost(post._id)">Delete</button>
     </li>
   </ul>
 </template>
@@ -12,7 +15,7 @@ import { ref } from 'vue';
 import PostService from '../logic/PostService';
 
 export default {
-  name: 'Post',
+  name: 'Posts',
   props: {
     posts: {
       type: Array,
@@ -29,9 +32,14 @@ export default {
       emit('updatePosts', newPosts);
     }
 
+    function formatCreatedAtDate(date) {
+      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+    }
+
     return {
       error,
-      deletePost
+      deletePost,
+      formatCreatedAtDate
     };
   }
 };
@@ -60,6 +68,11 @@ export default {
 
   &:first-child {
     margin-top: 0;
+  }
+
+  &__date {
+    margin-top: 1rem;
+    font-size: 1.2rem;
   }
 }
 </style>

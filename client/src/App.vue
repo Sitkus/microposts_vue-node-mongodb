@@ -3,21 +3,24 @@
     <img class="vue-logo" alt="Vue logo" src="./assets/logo.png" />
 
     <AddPost @updatePosts="posts = $event" v-bind:posts="posts" />
-    <Post @updatePosts="posts = $event" v-if="!isLoading" v-bind:posts="posts" />
+    <Posts @updatePosts="posts = $event" v-if="!isLoading" v-bind:posts="posts" />
+    <div class="error">
+      <p data-testid="error-message" v-if="error" class="error__message">{{ error }}</p>
+    </div>
 
-    <p class="loading" v-else>Loading...</p>
+    <p data-testid="loading" class="loading" v-if="isLoading">Loading...</p>
   </main>
 </template>
 
 <script>
 import { ref } from 'vue';
 import PostService from './logic/PostService';
-import { Post, AddPost } from './components';
+import { Posts, AddPost } from './components';
 
 export default {
   name: 'App',
   components: {
-    Post,
+    Posts,
     AddPost
   },
   setup() {
@@ -125,5 +128,15 @@ button {
 .loading {
   color: green;
   font-size: 16px;
+}
+
+.error {
+  height: 2rem;
+  margin-top: 2rem;
+
+  &__message {
+    font-weight: 500;
+    color: rgb(187, 6, 6);
+  }
 }
 </style>
